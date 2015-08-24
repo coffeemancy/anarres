@@ -1,0 +1,28 @@
+# ignore OSX related files
+.DS_Store
+
+# ignore test-kitchen, vagrant files
+.kitchen/*
+.vagrant
+
+# ignore ruby/rake temporary files
+.bundle
+.rake_test_cache
+.ruby-version
+.rvmrc
+*.lock
+
+# ignore vim/emacs swap files, temporary files
+*.swp
+*.swo
+\#*
+.\#*
+*~
+
+# ignore merge/diff files
+*.orig
+
+# ignore ISOs and torrents
+*.iso
+*.torrent
+out/**
