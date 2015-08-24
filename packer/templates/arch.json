@@ -1,0 +1,43 @@
+{ "description": "Builds an Arch Linux vagrant box",
+  "variables":
+  { "iso_url": "packer/isos/archlinux-2015.08.01-dual.iso",
+    "iso_checksum": "e98320cd5f0c346fff4140af0b5ffadd59849168",
+    "iso_checksum_type": "sha1" },
+  "builders":
+  [{ "name": "vbox-arch",
+     "type": "virtualbox-iso",
+     "iso_url": "{{user `iso_url`}}",
+     "iso_checksum": "{{user `iso_checksum`}}",
+     "iso_checksum_type": "{{user `iso_checksum_type`}}",
+     "guest_os_type": "ArchLinux_64",
+     "guest_additions_mode": "disable",
+     "output_directory": "out/virtualbox-iso",
+
+     "http_directory": ".",
+     "boot_wait": "5s",
+     "boot_command":
+     ["<enter><wait10><wait10>",
+      "/usr/bin/curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/packer/arch/poweroff.timer<enter><wait5>",
+      "/usr/bin/curl -O http://{{.HTTPIP}}:{{.HTTPPort}}/packer/common/root.sh<enter><wait5>",
+      "/usr/bin/bash -x ./root.sh<enter><wait5>",
+      "/usr/bin/systemctl start sshd<enter>"],
+     "disk_size": 8192,
+     "hard_drive_interface": "sata",
+
+     "ssh_username": "root",
+     "ssh_password": "vagrant",
+     "ssh_wait_timeout": "10h",
+     "shutdown_command": "systemctl start poweroff.timer",
+
+     "vboxmanage":
+     [["modifyvm", "{{.Name}}", "--memory", "2048"],
+      ["modifyvm", "{{.Name}}", "--cpus", "2"]] }],
+  "provisioners":
+  [{ "type": "shell",
+     "scripts":
+     ["packer/arch/virtualbox.sh"] }],
+  "post-processors":
+  [{ "type": "vagrant",
+     "keep_input_artifact": true,
+     "compression_level": 1,
+     "output": "out/vagrant/anarres-{{.BuildName}}.box" }] }
