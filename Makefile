@@ -6,3 +6,7 @@ include tasks/*.mk
 all: test
 
 test: clean style
+
+run:
+	./tasks/scripts/run.sh -v
+
