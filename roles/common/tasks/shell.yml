@@ -1,0 +1,30 @@
+---
+- name: install shell packages
+  pacman: name={{ item }} state=latest
+  with_items:
+  - zsh
+  - upower
+  - pygmentize
+
+## oh-my-zsh
+
+- name: clone oh-my-zsh
+  git: repo=https://github.com/robbyrussell/oh-my-zsh.git
+       dest={{ home }}/.oh-my-zsh
+
+- name: assure {{ username }} owns oh-my-zsh directory
+  file: path={{ home }}/.oh-my-zsh recurse=true
+        owner={{ username }} group={{ username }}
+
+- name: write out zsh scripts to source in ~/.zshrc
+  copy: src=dotzsh/ dest={{ zsh.dir }}
+        mode=0750 directory_mode=0750
+
+- name: render rbenv script template
+  template: src=dotzsh/rbenv.sh.j2 dest="{{ zsh.dir }}/rbenv.sh"
+            owner={{ username }} group={{ username }} mode=0750
+
+- name: configure oh-my-zsh profile
+  template: src=dotzshrc.j2 dest={{ home }}/.zshrc
+            owner={{ username }} group={{ username }} mode=0750
+

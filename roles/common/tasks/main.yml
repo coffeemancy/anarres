@@ -1,0 +1,7 @@
+---
+- include: pre.yml
+- include: shell.yml
+- include: dev.yml
+- include: gui.yml
+  when: gui == true
+

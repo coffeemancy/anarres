@@ -1,0 +1,9 @@
+---
+# handlers for notifications
+
+- name: restart lightdm
+  service: name=lightdm state=restarted
+
+- name: reload gpgagent
+  shell: echo RELOADAGENT | sudo -u {{ username }} gpg-connect-agent
+

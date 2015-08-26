@@ -1,0 +1,8 @@
+[user]
+{% for key, value in git.user.iteritems() %}
+{{ key }} = {{ value }}
+{% endfor %}
+
+[branch]
+autosetuprebase = always
+

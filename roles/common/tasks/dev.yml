@@ -1,0 +1,34 @@
+---
+- name: install development packages
+  pacman: name={{ item }} state=latest
+  with_items:
+  - make
+
+# setup ruby environment
+- name: clone latest rbenv from github
+  git: repo={{ rbenv.repo }} dest={{ rbenv.dir }}
+
+- name: install rbenv plugins
+  git: repo={{ item.repo }} dest="{{ rbenv.dir }}/plugins/{{ item.name }}"
+  with_items: "{{ rbenv.plugins }}"
+
+- name: make sure {{ username }} owns rbenv dir
+  file: path={{ rbenv.dir }} state=directory recurse=true
+        owner={{ username }} group={{ username }}
+
+- name: setup default gems to install in each ruby version
+  template: src=dotrbenv/default-gems.j2 dest="{{ rbenv.dir }}/default-gems"
+            owner={{ username }} group={{ username }} mode=0640
+
+- name: get list of installed rubies
+  command: ls "{{ rbenv.dir }}/versions"
+  register: rubies_installed
+
+- name: install rubies
+  shell: sudo -u {{ username }} "{{ rbenv.dir }}/bin/rbenv" install {{ item }}
+  with_items: "{{ rbenv.rubies }}" 
+  when: item not in rubies_installed.stdout_lines
+
+- name: set first listed ruby as global ruby version
+  shell: sudo -u {{ username }} "{{ rbenv.dir }}/bin/rbenv" global {{ rbenv.rubies | first }}
+

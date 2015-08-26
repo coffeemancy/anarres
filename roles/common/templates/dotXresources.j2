@@ -1,0 +1,14 @@
+{% for key, value in xr.colors.iteritems() %}
+*{{ key }}: {{ value }}
+{% endfor %}
+
+*font: {{ xr.font }}
+
+{% for key, value in urxvt.iteritems() %}
+URxvt.{{ key }}: {{ value }}
+{% endfor %}
+
+{% for key, value in xft.iteritems() %}
+Xft.{{ key }}: {{ value }}
+{% endfor %}
+
