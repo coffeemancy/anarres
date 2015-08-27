@@ -2,6 +2,12 @@
 username: cstedman
 home: "/home/{{ username }}"
 
+# emacs settings
+emacs:
+  dir: "{{ home }}/.emacs.d"
+  prelude:
+    installer: https://github.com/bbatsov/prelude/raw/master/utils/installer.sh
+
 # git settings
 git:
   user:

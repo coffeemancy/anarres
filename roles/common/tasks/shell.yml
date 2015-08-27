@@ -5,6 +5,8 @@
   - zsh
   - upower
   - pygmentize
+  - tree
+  when: ansible_os_family == "Archlinux"
 
 ## oh-my-zsh
 

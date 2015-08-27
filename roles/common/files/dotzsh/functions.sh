@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -eo pipefail
+IFS=$'\n\t'
 
 # start emacs server or connect to it if running
 function e {

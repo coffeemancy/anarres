@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-
+set -eo pipefail
+IFS=$'\n\t'
+ 
 # make sure to source functions.sh first, if exists
 if [ -f "~/.zsh/functions.sh" ]; then
     source "~/.zsh/functions.sh"
@@ -56,6 +58,7 @@ alias pwr="echo \"$(upower -i $(upower -e | grep BAT) | grep percent | sed -e 's
 alias rmcolors="sed -r \"s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g\""
 alias rmorig="find -type f | grep -v .git/ | grep orig | xargs rm"
 alias sshkrm="ssh-keygen -f \"/home/cstedman/.ssh/known_hosts\" -R"
+alias v="vim"
 alias vd="vagrant destroy"
 alias vp="vagrant provision"
 alias vssh="vagrant ssh"
