@@ -10,6 +10,7 @@ emacs:
 
 # git settings
 git:
+  mergetool: meld
   user:
     name: Carlton Stedman
     email: carlton.stedman@gmail.com

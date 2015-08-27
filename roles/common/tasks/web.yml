@@ -1,0 +1,19 @@
+---
+- name: install web packages
+  pacman: name={{ item }} state=latest
+  with_items:
+  - gstreamer
+  - gst-plugins-base
+  - gst-plugins-good
+  - firefox
+  when: ansible_os_family == "Archlinux"
+
+- name: assure {{ username }} owns .config dir
+  file: path="{{ home }}/.config" state=directory recurse=true
+        owner={{ username }} group={{ username }}
+
+- name: setup xdg directories config used by firefox
+  copy: src="dotconfig/user-dirs.dirs"
+        dest="{{ home }}/.config/user-dirs.dirs"
+        owner={{ username }} group={{ username }}
+
