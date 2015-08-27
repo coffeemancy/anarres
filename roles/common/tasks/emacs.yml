@@ -1,0 +1,41 @@
+---
+- name: install emacs dependencies
+  pacman: name={{ item }} state=latest
+  with_items:
+  - aspell
+  - aspell-en
+  when: ansible_os_family == "Archlinux"
+
+- name: install emacs
+  pacman: name=emacs state=latest
+  when: ansible_os_family == "Archlinux" and gui == true
+
+- name: install emacs (no gui)
+  pacman: name=emacs-nox state=latest
+  when: ansible_os_family == "Archlinux" and not gui == true
+
+## emacs prelude
+
+- name: check for prelude installation
+  stat: path="{{ emacs.dir }}/prelude-modules.el"
+  register: prelude_stat
+
+- name: install emacs prelude
+  shell: curl -L {{ emacs.prelude.installer }} | \
+         PRELUDE_INSTALL_DIR="{{ emacs.dir }}" sudo -u {{ username }} sh
+  when: not prelude_stat.stat.exists
+
+- name: update emacs prelude
+  shell: sudo -u {{ username }} git pull origin master
+  args:
+    chdir: "{{ emacs.dir }}"
+  when: prelude_stat.stat.exists
+
+- name: write out personal prelude emacs config files
+  copy: src=dotemacs.d/personal/ dest="{{ emacs.dir }}/personal"
+        owner={{ username }} group={{ username }}
+
+- name: assure {{ username }} owns emacs.d directory
+  file: path={{ home }}/.emacs.d recurse=true
+        owner={{ username }} group={{ username }}
+
