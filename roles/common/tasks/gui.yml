@@ -13,6 +13,10 @@
   - xmonad-contrib
   - rxvt-unicode
   - adobe-source-code-pro-fonts
+  - adobe-source-sans-pro-fonts
+  - ttf-liberation
+  - ttf-linux-libertine
+  when: ansible_os_family == "Archlinux"
 
 ## lightdm
 
@@ -31,6 +35,7 @@
 - name: assure {{ username }} owns xmonad directory
   file: path={{ home }}/.xmonad state=directory
         owner={{ username }} group={{ username }} mode=0750
+
 - name: configure xmonad
   template: src=dotxmonad/xmonad.hs.j2 dest={{ home }}/.xmonad/xmonad.hs
             owner={{ username }} group={{ username }} mode=0640

@@ -4,4 +4,7 @@
 - include: dev.yml
 - include: gui.yml
   when: gui == true
+- include: emacs.yml
+- include: web.yml
+  when: gui == true
 

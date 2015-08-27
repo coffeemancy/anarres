@@ -3,6 +3,13 @@
   pacman: name={{ item }} state=latest
   with_items:
   - make
+  when: ansible_os_family == "Archlinux"
+
+- name: install development gui packages
+  pacman: name={{ item }} state=latest
+  with_items:
+  - meld
+  when: ansible_os_family == "Archlinux" and gui == true
 
 # setup ruby environment
 - name: clone latest rbenv from github
