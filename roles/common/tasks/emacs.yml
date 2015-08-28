@@ -21,14 +21,18 @@
   register: prelude_stat
 
 - name: install emacs prelude
-  shell: curl -L {{ emacs.prelude.installer }} | \
-         PRELUDE_INSTALL_DIR="{{ emacs.dir }}" sudo -u {{ username }} sh
+  shell: curl -L {{ emacs.prelude.installer }} || \
+         PRELUDE_INSTALL_DIR="{{ emacs.dir }}" sh
+  become: yes
+  become_user: "{{ username }}"
   when: not prelude_stat.stat.exists
 
 - name: update emacs prelude
-  shell: sudo -u {{ username }} git pull origin master
+  shell: git pull origin master
   args:
     chdir: "{{ emacs.dir }}"
+  become: yes
+  become_user: "{{ username }}"
   when: prelude_stat.stat.exists
 
 - name: write out personal prelude emacs config files
@@ -39,3 +43,14 @@
   file: path={{ home }}/.emacs.d recurse=true
         owner={{ username }} group={{ username }}
 
+## systemd setup
+
+- name: assure user systemd directory exists, owned by {{ username }}
+  file: path={{ home }}/.config/systemd/user state=directory recurse=true
+        owner={{ username }} group={{ username }}
+
+- name: setup systemd config for emacs daemon
+  copy: src=dotconfig/systemd/user/emacs.service
+        dest={{ home }}/.config/systemd/user/emacs.service
+        owner={{ username }} group={{ username }}
+  notify: restart emacs service

@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
-set -eo pipefail
-IFS=$'\n\t'
 
-# start emacs server or connect to it if running
+# connect to emacs
 function e {
-    # start emacs daemon if not running
-    if ! ps aux | egrep 'emacs.*daemon' | grep -v grep > /dev/null; then
-        printf "\e[35mStarting emacs daemon\e[00m\n"
-        emacs --daemon 2>&1
+    # if systemd service, start the emacs service
+    if [ -e ~/.config/systemd/user/emacs.service ]; then
+        systemctl --user start emacs
+    else
+        # start emacs daemon if not running
+        if ! ps aux | egrep 'emacs.*daemon' | grep -v grep > /dev/null; then
+            printf "\e[35mStarting emacs daemon\e[00m\n"
+            emacs --daemon 2>&1
+        fi
     fi
 
-    emacsclient -nw "$@"
+    emacsclient -a "" -t "$@"
 }
 
 function wtfgit {
@@ -85,4 +88,3 @@ function xr {
         fi
     done
 }
-
