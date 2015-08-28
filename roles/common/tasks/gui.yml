@@ -16,6 +16,7 @@
   - adobe-source-sans-pro-fonts
   - ttf-liberation
   - ttf-linux-libertine
+  - xsel
   when: ansible_os_family == "Archlinux"
 
 ## lightdm
@@ -46,3 +47,26 @@
   template: src=dotXresources.j2 dest={{ home }}/.Xresources
             owner={{ username }} group={{ username }} mode=0640
 
+## xfluxd (AUR)
+
+- name: check if xfluxd already installed
+  shell: pacman -Q xfluxd 2>&1 | grep -v 'not found' || echo "no"
+  register: xfluxd_installed
+
+- name: install xfluxd from AUR
+  shell: yaourt -S --noconfirm xfluxd
+  become: yes
+  become_user: "{{ username }}"
+  when: ansible_os_family == "Archlinux" and xfluxd_installed.stdout == "no"
+
+## spotify (AUR)
+
+- name: check if spotify already installed
+  shell: pacman -Q spotify-beta 2>&1 | grep -v 'not found' || echo "no"
+  register: spotify_installed
+
+- name: install spotify-beta from AUR
+  shell: yaourt -S --noconfirm spotify-beta
+  become: yes
+  become_user: "{{ username }}"
+  when: ansible_os_family == "Archlinux" and spotify_installed.stdout == "no"
