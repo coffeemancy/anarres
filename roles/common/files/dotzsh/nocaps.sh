@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-set -eo pipefail
-IFS=$'\n\t'
 
 # Remap the CapsLock key to a Control key for
 # the X Window system.

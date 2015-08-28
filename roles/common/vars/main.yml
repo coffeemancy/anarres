@@ -12,7 +12,7 @@ emacs:
 git:
   mergetool: meld
   user:
-    name: Carlton Stedman
+    name: carltonstedman
     email: carlton.stedman@gmail.com
     signingkey: 4A971E66
   ssh:
@@ -91,7 +91,7 @@ xr:
 zsh:
   dir: "{{ home }}/.zsh"
   theme: miloshadzic
-  plugins: gpg-agent
+  plugins: gpg-agent pass
   sources:
   - aliases.sh
   - functions.sh

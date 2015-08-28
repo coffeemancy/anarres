@@ -2,7 +2,7 @@
 - name: install development packages
   pacman: name={{ item }} state=latest
   with_items:
-  - make
+  - virtualbox
   when: ansible_os_family == "Archlinux"
 
 - name: install development gui packages
@@ -32,10 +32,14 @@
   register: rubies_installed
 
 - name: install rubies
-  shell: sudo -u {{ username }} "{{ rbenv.dir }}/bin/rbenv" install {{ item }}
+  shell: "{{ rbenv.dir }}/bin/rbenv install {{ item }}"
+  become: yes
+  become_user: "{{ username }}"
   with_items: "{{ rbenv.rubies }}" 
   when: item not in rubies_installed.stdout_lines
 
 - name: set first listed ruby as global ruby version
-  shell: sudo -u {{ username }} "{{ rbenv.dir }}/bin/rbenv" global {{ rbenv.rubies | first }}
+  shell: "{{ rbenv.dir }}/bin/rbenv global {{ rbenv.rubies | first }}"
+  become: yes
+  become_user: "{{ username }}"
 

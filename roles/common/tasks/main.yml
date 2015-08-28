@@ -1,10 +1,9 @@
 ---
 - include: pre.yml
-- include: shell.yml
-- include: dev.yml
-- include: gui.yml
+- include: shell.yml tags=dev,shell
+- include: dev.yml tags=dev
+- include: gui.yml tags=gui
   when: gui == true
-- include: emacs.yml
-- include: web.yml
+- include: emacs.yml tags=dev,emacs
+- include: web.yml tags=gui,web
   when: gui == true
-
