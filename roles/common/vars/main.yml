@@ -26,6 +26,18 @@ gpg:
 # enable gui (xorg)
 gui: true
 
+# pyenv settings
+pyenv:
+  dir: "{{ home }}/.pyenv"
+  repo: https://github.com/yyuu/pyenv
+  plugins:
+  - repo: https://github.com/yyuu/pyenv-virtualenv
+    name: pyenv-virtualenv
+  # first python listed is set as global default
+  pythons:
+  - 3.4.3
+  - 2.7.10
+
 urxvt:
   background: rgba:1000/1000/1000/dddd
   depth: 32

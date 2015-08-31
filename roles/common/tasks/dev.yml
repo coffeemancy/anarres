@@ -11,7 +11,11 @@
   - meld
   when: ansible_os_family == "Archlinux" and gui == true
 
-# setup ruby environment
+- name: create ~/bin
+  file: path="{{ home }}/bin" state=directory
+        owner={{ username }} group={{ username }}
+
+## setup ruby environment
 - name: clone latest rbenv from github
   git: repo={{ rbenv.repo }} dest={{ rbenv.dir }}
 
@@ -28,14 +32,14 @@
             owner={{ username }} group={{ username }} mode=0640
 
 - name: get list of installed rubies
-  command: ls "{{ rbenv.dir }}/versions"
+  shell: ls "{{ rbenv.dir }}/versions" 2>&1 || echo ""
   register: rubies_installed
 
 - name: install rubies
   shell: "{{ rbenv.dir }}/bin/rbenv install {{ item }}"
   become: yes
   become_user: "{{ username }}"
-  with_items: "{{ rbenv.rubies }}" 
+  with_items: "{{ rbenv.rubies }}"
   when: item not in rubies_installed.stdout_lines
 
 - name: set first listed ruby as global ruby version
@@ -43,3 +47,51 @@
   become: yes
   become_user: "{{ username }}"
 
+## setup clojure environment
+
+- name: check if jdk already installed
+  shell: pacman -Q jdk 2>&1 | grep -v 'not found' || echo "no"
+  register: jdk_installed
+
+- name: install java jdk
+  shell: yaourt -S --noconfirm jdk
+  become: yes
+  become_user: "{{ username }}"
+  when: ansible_os_family == "Archlinux" and jdk_installed.stdout == "no"
+
+- name: download leiningen script
+  get_url: url=https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+           dest="{{ home }}/bin/lein"
+
+- name: assure lein is executable
+  file: path="{{ home }}/bin/lein" state=touch
+        owner={{ username }} group={{ username }} mode=0750
+
+## setup python environment
+
+- name: clone latest pyenv from github
+  git: repo={{ pyenv.repo }} dest={{ pyenv.dir }}
+
+- name: install pyenv plugins
+  git: repo={{ item.repo }} dest="{{ pyenv.dir }}/plugins/{{ item.name }}"
+  with_items: "{{ pyenv.plugins }}"
+
+- name: make sure {{ username }} owns pyenv dir
+  file: path={{ pyenv.dir }} state=directory recurse=true
+        owner={{ username }} group={{ username }}
+
+- name: get list of installed pythons
+  shell: ls "{{ pyenv.dir }}/versions" 2>&1 || echo ""
+  register: pythons_installed
+
+- name: install pythons
+  shell: "{{ pyenv.dir }}/bin/pyenv install {{ item }}"
+  become: yes
+  become_user: "{{ username }}"
+  with_items: "{{ pyenv.pythons }}"
+  when: item not in pythons_installed.stdout_lines
+
+- name: set first listed python as global python version
+  shell: "{{ pyenv.dir }}/bin/pyenv global {{ pyenv.pythons | first }}"
+  become: yes
+  become_user: "{{ username }}"
