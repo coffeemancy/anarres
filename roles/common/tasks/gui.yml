@@ -13,10 +13,8 @@
   - xmonad-contrib
   - rxvt-unicode
   - adobe-source-code-pro-fonts
-  - adobe-source-sans-pro-fonts
-  - ttf-liberation
-  - ttf-linux-libertine
   - xsel
+  - feh
   when: ansible_os_family == "Archlinux"
 
 ## lightdm
