@@ -18,4 +18,4 @@ Currently, `make packer` will download the torrents (into "packer/torrents"), an
 
 # et cetera
 
-♡ 2015 by Carlton Stedman. Copying art is an act of love. Please copy.
+♡ 2015. Copying art is an act of love. Please copy.
