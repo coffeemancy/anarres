@@ -2,69 +2,14 @@
 - name: install gui packages
   pacman: name={{ item }} state=latest
   with_items:
-  - xf86-video-intel
-  - mesa-libgl
-  - xorg-server
-  - xf86-input-synaptics
-  - xorg-xrandr
-  - lightdm
-  - lightdm-gtk-greeter
-  - xmonad
-  - xmonad-contrib
-  - rxvt-unicode
   - adobe-source-code-pro-fonts
-  - xsel
   - feh
   when: ansible_os_family == "Archlinux"
 
-## lightdm
-
-- name: use lightdm-gtk-greeter
-  lineinfile: dest=/etc/lightdm/lightdm.conf
-              regexp=^\#?greeter-session=.*
-              line=greeter-session=lightdm-gtk-greeter
-  notify:
-  - restart lightdm
-
-- name: enable lightdm at startup and start
-  service: name=lightdm enabled=yes state=started
-
-## xmonad
-
-- name: assure {{ username }} owns xmonad directory
-  file: path={{ home }}/.xmonad state=directory
-        owner={{ username }} group={{ username }} mode=0750
-
-- name: configure xmonad
-  template: src=dotxmonad/xmonad.hs.j2 dest={{ home }}/.xmonad/xmonad.hs
-            owner={{ username }} group={{ username }} mode=0640
-
 ## urxvt
 
+# TODO: necessary or relevant?
 - name: configure urxvt
   template: src=dotXresources.j2 dest={{ home }}/.Xresources
             owner={{ username }} group={{ username }} mode=0640
 
-## xfluxd (AUR)
-
-- name: check if xfluxd already installed
-  shell: pacman -Q xfluxd 2>&1 | grep -v 'not found' || echo "no"
-  register: xfluxd_installed
-
-- name: install xfluxd from AUR
-  shell: yaourt -S --noconfirm xfluxd
-  become: yes
-  become_user: "{{ username }}"
-  when: ansible_os_family == "Archlinux" and xfluxd_installed.stdout == "no"
-
-## spotify (AUR)
-
-- name: check if spotify already installed
-  shell: pacman -Q spotify-beta 2>&1 | grep -v 'not found' || echo "no"
-  register: spotify_installed
-
-- name: install spotify-beta from AUR
-  shell: yaourt -S --noconfirm spotify-beta
-  become: yes
-  become_user: "{{ username }}"
-  when: ansible_os_family == "Archlinux" and spotify_installed.stdout == "no"

@@ -4,8 +4,5 @@
 - include: dev.yml tags=dev
 - include: gui.yml tags=gui
   when: gui == true
-- include: emacs.yml tags=dev,emacs
 - include: web.yml tags=gui,web
-  when: gui == true
-- include: docs.yml tags=docs,gui
   when: gui == true

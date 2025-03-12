@@ -2,34 +2,14 @@
 - name: install web packages
   pacman: name={{ item }} state=latest
   with_items:
-  - gstreamer
-  - gst-plugins-base
-  - gst-plugins-good
-  - gst-libav
   - firefox
-  - transmission-gtk
   when: ansible_os_family == "Archlinux"
 
 ## firefox
 
-- name: assure {{ username }} owns .config dir
-  file: path="{{ home }}/.config" state=directory recurse=true
-        owner={{ username }} group={{ username }}
-
+# TODO: still care about these?
 - name: setup xdg directories config used by firefox
   copy: src="dotconfig/user-dirs.dirs"
         dest="{{ home }}/.config/user-dirs.dirs"
         owner={{ username }} group={{ username }}
 
-## google-chrome (AUR)
-
-- name: check if google-chrome already installed
-  shell: pacman -Q google-chrome 2>&1 | grep -v 'not found' || echo "no"
-  register: google_chrome_installed
-
-- name: install google-chrome from AUR
-  shell: yaourt -S --noconfirm google-chrome
-  become: yes
-  become_user: "{{ username }}"
-  when: ansible_os_family == "Archlinux" and
-        google_chrome_installed.stdout == "no"

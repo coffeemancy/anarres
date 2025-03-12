@@ -2,12 +2,8 @@
 - name: install pre-requisite packages
   pacman: name={{ item }} state=latest
   with_items:
-  - openssh
-  - openssl
   - git
   - gnupg
-  - base-devel
-  - rsync
   when: ansible_os_family == "Archlinux"
 
 ## ssh
@@ -42,40 +38,3 @@
             owner={{ username }} group={{ username }} mode=0640
   notify:
   - reload gpgagent
-
-## yaourt
-
-- name: check if yaourt already installed
-  shell: pacman -Q yaourt 2>&1 | grep -v 'not found' || echo "no"
-  register: yaourt_installed
-  when: ansible_os_family == "Archlinux"
-
-- name: download yaourt pkgbuild tarballs
-  get_url: url=https://aur.archlinux.org/cgit/aur.git/snapshot/{{ item }}
-           dest=/tmp/{{ item }}
-  with_items:
-    - package-query.tar.gz
-    - yaourt.tar.gz
-  when: ansible_os_family == "Archlinux" and yaourt_installed.stdout == "no"
-
-- name: untar yaourt tarballs
-  shell: tar zxvf {{ item }}.tar.gz
-  args:
-    chdir: /tmp
-  become: yes
-  become_user: "{{ username }}"
-  with_items:
-    - package-query
-    - yaourt
-  when: ansible_os_family == "Archlinux" and yaourt_installed.stdout == "no"
-
-- name: build/install yaourt pkgbuilds
-  shell: makepkg -sri --noconfirm
-  args:
-    chdir: "/tmp/{{ item }}"
-  become: yes
-  become_user: "{{ username }}"
-  with_items:
-    - package-query
-    - yaourt
-  when: ansible_os_family == "Archlinux" and yaourt_installed.stdout == "no"

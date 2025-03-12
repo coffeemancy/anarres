@@ -3,15 +3,12 @@
   pacman: name={{ item }} state=latest
   with_items:
   - zsh
-  - upower
-  - pygmentize
   - tree
-  - pass
-  - alsa-utils
   when: ansible_os_family == "Archlinux"
 
 ## oh-my-zsh
 
+# TODO: use yay/AUR
 - name: clone oh-my-zsh
   git: repo=https://github.com/robbyrussell/oh-my-zsh.git
        dest={{ home }}/.oh-my-zsh
@@ -19,10 +16,6 @@
 - name: write out zsh scripts to source in ~/.zshrc
   copy: src=dotzsh/ dest={{ zsh.dir }}
         mode=0750 directory_mode=0750
-
-- name: render rbenv script template
-  template: src=dotzsh/rbenv.sh.j2 dest="{{ zsh.dir }}/rbenv.sh"
-            owner={{ username }} group={{ username }} mode=0750
 
 - name: configure oh-my-zsh profile
   template: src=dotzshrc.j2 dest={{ home }}/.zshrc
@@ -34,18 +27,4 @@
   with_items:
   - .oh-my-zsh
   - .zsh
-
-## pass password manager
-- name: check for password store existence
-  stat: path={{ home }}/.password-store
-  register: password_store
-
-- name: update password store
-  git: repo=https://github.com/carltonstedman/pass-store.git
-       dest={{ home }}/.password-store
-  when: not password_store.stat.exists
-
-- name: assure {{ username }} owns their password store
-  file: path={{ home }}/.password-store recurse=true
-        owner={{ username }} group={{ username }}
 
