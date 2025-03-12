@@ -2,6 +2,9 @@
 rbw:
   email: null
 
+spacevim:
+  colorscheme: zaibatsu
+
 zsh:
   plugins:
     - git

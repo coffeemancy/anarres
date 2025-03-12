@@ -1,7 +1,4 @@
 ---
-# enable gui (xorg)
-gui: true
-
 # pyenv settings
 pyenv:
   dir: "{{ home }}/.pyenv"
@@ -13,36 +10,3 @@ pyenv:
   pythons:
   - 3.4.3
   - 2.7.10
-
-urxvt:
-  background: rgba:1000/1000/1000/dddd
-  depth: 32
-  letterSpace: -1
-  scrollBar: false
-
-xft:
-  antialias: true
-  dpi: 96
-
-# other xresources configs
-xr:
-  colors:
-    background: rgb:10/10/10
-    foreground: rgb:D3/D3/D3
-    color0:     rgb:10/10/10
-    color1:     rgb:CD/5C/5C
-    color2:     rgb:2E/8B/57
-    color3:     rgb:F0/E6/8C
-    color4:     rgb:B0/C4/DE
-    color5:     rgb:BA/55/D3
-    color6:     rgb:46/82/B4
-    color7:     rgb:D3/D3/D3
-    color8:     rgb:4D/4D/4D
-    color9:     rgb:FF/6A/6A
-    color10:    rgb:8F/BC/8F
-    color11:    rgb:FF/FA/CD
-    color12:    rgb:1E/90/FF
-    color13:    rgb:DB/70/93
-    color14:    rgb:5F/9E/A0
-    color15:    rgb:FF/FF/FF
-  font: xft:Source Code Pro:size=11

@@ -9,6 +9,7 @@
     state: latest
   loop:
     - htop
+    - neovim
     - rbw
     - tmux
     - tree
@@ -77,3 +78,36 @@
     # only run when rbw is not configured and email is set
     - "rbw_configured.rc != 0"
     - "rbw.email is not none"
+
+## spacevim
+
+- name: Download SpaceVim
+  get_url:
+    url: https://spacevim.org/install.sh
+    dest: "{{ home }}/.oh-my-zsh/spacevim-install.sh"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0750
+  register: get_spacevim
+
+- name: Install SpaceVim
+  shell:
+    cmd: "bash {{ home }}/.oh-my-zsh/spacevim-install.sh"
+  when: "get_spacevim.changed"
+
+- name: Enable colorschemes in SpaceVim
+  blockinfile:
+    append_newline: true
+    block: |
+      [[layers]]
+      name = "colorscheme"
+    path: "{{ home }}/.SpaceVim.d/init.toml"
+    prepend_newline: true
+
+- name: Set colorscheme for SpaceVim
+  lineinfile:
+    backrefs: true
+    line: '\1 = "{{ spacevim.colorscheme }}"'
+    path: "{{ home }}/.SpaceVim.d/init.toml"
+    regexp: "^(.*colorscheme) ="
+    state: present
