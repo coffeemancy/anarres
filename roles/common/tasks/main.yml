@@ -1,8 +1,0 @@
----
-- include: pre.yml
-- include: shell.yml tags=dev,shell
-- include: dev.yml tags=dev
-- include: gui.yml tags=gui
-  when: gui == true
-- include: web.yml tags=gui,web
-  when: gui == true

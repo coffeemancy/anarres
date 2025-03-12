@@ -24,6 +24,7 @@
     - oh-my-zsh-git
   register: result
   changed_when: "'there is nothing to do' not in result.stdout"
+  when: ansible_os_family == "Archlinux"
 
 ## oh-my-zsh
 
@@ -47,10 +48,27 @@
     - line: "plugins=({{ zsh.plugins | join(' ') }})"
       regexp: "^plugins="
 
+# make sure pyenv is loaded before plugins, otherwise get warning
+- name: Assure pyenv is loaded before plugins in .zshrc
+  blockinfile:
+    append_newline: true
+    block: |
+      export PYENV_ROOT="$HOME/.pyenv"
+      if [[ -e "$PYENV_ROOT" ]]; then
+        if [[ "$PATH" != *"$PYENV_ROOT/bin"* ]]; then
+          export PATH="$PYENV_ROOT/bin:$PATH"
+        fi
+        eval "$(pyenv init --path)"
+      fi
+    # insert block at beginning of file
+    insertbefore: "BOF"
+    path: "{{ home }}/.zshrc"
+    prepend_newline: true
+
 - name: Update custom zsh files
   template:
     src: "{{ item }}.j2"
-    # NOTE: oh-my-zsh automatically sources all files in $ZSH_CUSTOM i.e. ~/.oh-my-zsh/custom/
+    # note: oh-my-zsh automatically sources all files in $ZSH_CUSTOM i.e. ~/.oh-my-zsh/custom/
     dest: "{{ home }}/.oh-my-zsh/custom/{{ item }}"
     owner: "{{ username }}"
     group: "{{ username }}"
