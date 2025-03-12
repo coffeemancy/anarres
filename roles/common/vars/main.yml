@@ -1,28 +1,4 @@
 ---
-username: cstedman
-home: "/home/{{ username }}"
-
-# emacs settings
-emacs:
-  dir: "{{ home }}/.emacs.d"
-  prelude:
-    installer: https://github.com/bbatsov/prelude/raw/master/utils/installer.sh
-
-# git settings
-git:
-  mergetool: meld
-  user:
-    name: carltonstedman
-    email: carlton.stedman@gmail.com
-    signingkey: 4A971E66
-  ssh:
-    key: "{{ ssh.keydir }}/github-rsa"
-
-# gpg settings
-gpg:
-  pinentry: pinentry-curses
-  ttl: 3600
-
 # enable gui (xorg)
 gui: true
 
@@ -44,37 +20,9 @@ urxvt:
   letterSpace: -1
   scrollBar: false
 
-# rbenv settings
-rbenv:
-  dir: "{{ home }}/.rbenv"
-  repo: https://github.com/sstephenson/rbenv
-  plugins:
-  - repo: https://github.com/sstephenson/ruby-build
-    name: ruby-build
-  - repo: https://github.com/sstephenson/rbenv-default-gems
-    name: rbenv-default-gems
-  gems:
-  - name: bundler
-    version: = 1.10.5
-  - name: rake
-  - name: pry
-  - name: pry-coolline
-  - name: pry-doc
-  - name: pry-stack_explorer
-  # first ruby listed is set as global default
-  rubies:
-  - 2.1.6
-
-# ssh settings
-ssh:
-  keydir: "{{ home }}/.ssh/keys"
-
 xft:
   antialias: true
   dpi: 96
-
-xmonad:
-  terminal: urxvt
 
 # other xresources configs
 xr:

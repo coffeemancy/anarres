@@ -21,10 +21,12 @@ sudo pacman -S python-pipx
 pipx install --include-deps ansible --pip-args "-c constraints.txt"
 ```
 
+Customizations can be made in the vars file `vars.yaml`.
+
 Then, the playbook can be applied as a specified user (i.e. "user" below):
 
 ```bash
-ansible-playbook anarres.yml -b -i inv -u user
+ansible-playbook anarres.yaml -bK -i inv -u user --extra-vars "@vars.yaml"
 ```
 
 ## development and testing

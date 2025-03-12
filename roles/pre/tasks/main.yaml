@@ -1,0 +1,46 @@
+---
+# Anarres :: pre
+# 
+# Role to setup pre-requisites prior to running other roles.
+#
+- name: "Install pre-requisite packages"
+  community.general.pacman:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - git
+  when: ansible_os_family == "Archlinux"
+
+## ssh
+- name: "Assure {{ username }} owns their ssh directory"
+  file:
+    group: "{{ username }}"
+    mode: 0700
+    owner: "{{ username }}"
+    path: "{{ home }}/.ssh/keys"
+    recurse: true
+    state: directory
+
+- name: "Add github to ssh config"
+  # NOTE: community.general.ssh_config is _not_ used, as that requires paramiko
+  blockinfile:
+    append_newline: true
+    block: |
+      Host github.com
+        User git
+        IdentityFile ~/.ssh/github
+        IdentitiesOnly yes
+    group: "{{ username }}"
+    mode: 0700
+    owner: "{{ username }}"
+    path: "{{ home }}/.ssh/config"
+    prepend_newline: true
+
+## git
+- name: "Add settings to ~/.gitconfig"
+  community.general.git_config:
+    file: "{{ home }}/.gitconfig"
+    name: "{{ item.key }}"
+    scope: file
+    value: "{{ item.value }}"
+  loop: "{{ git | dict2items }}"

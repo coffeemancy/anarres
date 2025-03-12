@@ -1,7 +1,0 @@
----
-- name: playbook to setup and configure my laptop
-  hosts: local
-  connection: local
-  roles:
-    - common
-

@@ -1,0 +1,28 @@
+---
+# Anarres
+#
+# Playbook to setup and configure my workstations.
+#
+# Current target systems:
+# * EndevaourOS "Mercury" (2025) on x86
+#
+# Usage:
+#
+#   ansible-playbook anarres.yaml -bK -i inv -u user --extra-vars "@vars.yaml"
+#
+# Note: "--skip-tags" can be used to exclude e.g. "dev" or "games"
+- name: Setup and configure workstations
+  hosts: local
+  roles:
+    # setup prerequisites
+    - role: pre
+#    # setup shell and CLI apps
+#    - role: shell
+#    # setup web and GUI apps
+#    - role: web
+#    # setup development environments
+#    - role: dev
+#      tags: dev
+#    # setup gaming
+#    - role: games
+#      tags: games
