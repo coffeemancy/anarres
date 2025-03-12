@@ -46,15 +46,3 @@ xr:
     color14:    rgb:5F/9E/A0
     color15:    rgb:FF/FF/FF
   font: xft:Source Code Pro:size=11
-
-# zsh settings
-zsh:
-  dir: "{{ home }}/.zsh"
-  theme: miloshadzic
-  plugins: gpg-agent pass
-  sources:
-  - aliases.sh
-  - functions.sh
-  - nocaps.sh
-  - rbenv.sh
-

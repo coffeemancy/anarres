@@ -26,7 +26,7 @@ Customizations can be made in the vars file `vars.yaml`.
 Then, the playbook can be applied as a specified user (i.e. "user" below):
 
 ```bash
-ansible-playbook anarres.yaml -bK -i inv -u user --extra-vars "@vars.yaml"
+ansible-playbook anarres.yaml -K -i inv -u user --extra-vars "@vars.yaml"
 ```
 
 ## development and testing

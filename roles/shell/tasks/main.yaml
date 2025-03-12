@@ -1,0 +1,79 @@
+---
+# Anarres :: shell
+#
+# Role to setup shell and CLI packages.
+#
+- name: Install shell and CLI packages
+  community.general.pacman:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - htop
+    - rbw
+    - tmux
+    - tree
+    - zsh
+  become: true
+  when: ansible_os_family == "Archlinux"
+
+- name: Install AUR CLI packages with yay
+  command:
+    cmd: "yay --noconfirm --noprogressbar --needed --aur --sync {{ item }}"
+  loop:
+    - oh-my-zsh-git
+  register: result
+  changed_when: "'there is nothing to do' not in result.stdout"
+
+## oh-my-zsh
+
+- name: Assure user owns .oh-my-zsh directories
+  file:
+    group: "{{ username }}"
+    owner: "{{ username }}"
+    path: "{{ home }}/.oh-my-zsh"
+    recurse: true
+  become: true
+
+- name: Update oh-my-zsh settings in .zshrc
+  lineinfile:
+    line: "{{ item.line }}"
+    path: "{{ home }}/.zshrc"
+    regexp: "{{ item.regexp }}"
+    state: present
+  loop:
+    - line: "ZSH_THEME={{ zsh.theme }}"
+      regexp: "^ZSH_THEME="
+    - line: "plugins=({{ zsh.plugins | join(' ') }})"
+      regexp: "^plugins="
+
+- name: Update custom zsh files
+  template:
+    src: "{{ item }}.j2"
+    # NOTE: oh-my-zsh automatically sources all files in $ZSH_CUSTOM i.e. ~/.oh-my-zsh/custom/
+    dest: "{{ home }}/.oh-my-zsh/custom/{{ item }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: 0750
+  loop:
+    - aliases.zsh
+    - custom.zsh
+    - functions.zsh
+
+## rbw
+
+- name: Check if rbw Bitwarden client is already configured
+  command:
+    cmd: "rbw config show"
+  register: rbw_configured
+  changed_when: "'failed to load config' in rbw_configured.stderr"
+  # only fail if rbw command is missing
+  failed_when: "rbw_configured.rc == 127"
+
+- name: Configure rbw Bitwarden client
+  command:
+    cmd: "rbw config set {{ item.key }} {{ item.value }}"   
+  loop: "{{ rbw | dict2items }}"
+  when: 
+    # only run when rbw is not configured and email is set
+    - "rbw_configured.rc != 0"
+    - "rbw.email is not none"

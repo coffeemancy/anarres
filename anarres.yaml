@@ -8,7 +8,7 @@
 #
 # Usage:
 #
-#   ansible-playbook anarres.yaml -bK -i inv -u user --extra-vars "@vars.yaml"
+#   ansible-playbook anarres.yaml -K -i inv -u user --extra-vars "@vars.yaml"
 #
 # Note: "--skip-tags" can be used to exclude e.g. "dev" or "games"
 - name: Setup and configure workstations
@@ -16,8 +16,8 @@
   roles:
     # setup prerequisites
     - role: pre
-#    # setup shell and CLI apps
-#    - role: shell
+    # setup shell and CLI apps
+    - role: shell
 #    # setup web and GUI apps
 #    - role: web
 #    # setup development environments

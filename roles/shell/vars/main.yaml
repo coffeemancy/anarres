@@ -1,0 +1,8 @@
+---
+rbw:
+  email: null
+
+zsh:
+  plugins:
+    - git
+  theme: robbyrussell

@@ -9,6 +9,8 @@
     state: latest
   loop:
     - git
+    - yay
+  become: true
   when: ansible_os_family == "Archlinux"
 
 ## ssh
@@ -20,6 +22,7 @@
     path: "{{ home }}/.ssh/keys"
     recurse: true
     state: directory
+  become: true
 
 - name: "Add github to ssh config"
   # NOTE: community.general.ssh_config is _not_ used, as that requires paramiko
