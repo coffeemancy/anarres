@@ -1,15 +1,16 @@
 ---
-- name: install web packages
-  pacman: name={{ item }} state=latest
-  with_items:
+# Anarres :: web
+#
+# Install and configure web and GUI apps.
+#
+- name: Install web and GUI app packages
+  community.general.pacman:
+    name: "{{ item }}"
+    state: latest
+  loop:
+  - adobe-source-code-pro-fonts
+  - feh
   - firefox
+  - meld
   when: ansible_os_family == "Archlinux"
-
-## firefox
-
-# TODO: still care about these?
-- name: setup xdg directories config used by firefox
-  copy: src="dotconfig/user-dirs.dirs"
-        dest="{{ home }}/.config/user-dirs.dirs"
-        owner={{ username }} group={{ username }}
-
+  become: true

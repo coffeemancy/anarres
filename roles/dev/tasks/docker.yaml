@@ -1,0 +1,16 @@
+---
+# Anarres :: dev :: docker
+# 
+# Setup docker-based development environment.
+#
+# This task file is included in main whenever the "docker" tag is not in "--skip-tags".
+
+- name: Install docker dev env packages
+  community.general.pacman:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - docker
+    - docker-compose
+  when: ansible_os_family == "Archlinux"
+  become: true

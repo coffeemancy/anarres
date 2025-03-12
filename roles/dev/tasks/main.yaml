@@ -1,0 +1,24 @@
+---
+# Anarres :: dev
+#
+# Setup development environment.
+#
+# This role is gated behind the "dev" tag in the anarres.yaml playbook; it can be excluded with "--skip-tags".
+#
+# There are additional tags defined in here for different environments, which could be excluded:
+# * docker
+# * python
+
+# docker dev env
+- name: Setup docker dev env
+  include_tasks:
+    file: docker.yaml
+  tags:
+    - docker
+
+# python dev env
+- name: Setup python dev env
+  include_tasks:
+    file: python.yaml
+  tags:
+    - python
