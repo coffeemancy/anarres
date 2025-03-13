@@ -46,4 +46,4 @@
     name: "{{ item.key }}"
     scope: file
     value: "{{ item.value }}"
-  loop: "{{ git | dict2items }}"
+  loop: "{{ git | d({}) | dict2items }}"

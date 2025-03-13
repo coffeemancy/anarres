@@ -1,0 +1,36 @@
+---
+# Example vars.yaml file for use with anarres.yaml playbook
+
+# local linux username
+username: user
+# home: "/home/{{ username }}"
+
+# settings for git, e.g. .gitconfig
+git:
+  branch.autosetuprebase: always
+  diff.tool: meld
+  merge.tool: meld
+  user.email: user@email.com
+  user.name: User Name
+
+pyenv:
+  # python version to install with pyenv
+  versions: []
+
+# rbw client for BitWarden
+# https://github.com/doy/rbw
+rbw:
+  email: user@email.com
+  pinentry: pinentry-curses
+
+# some settings for SpaceVim
+spacevim:
+  colorscheme: jellybeans
+
+# oh-my-zsh settings
+zsh:
+  plugins:
+    - git
+    - pyenv
+    - tmux
+  theme: robbyrussell

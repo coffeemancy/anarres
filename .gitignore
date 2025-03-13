@@ -27,3 +27,5 @@
 *.torrent
 out/**
 *.pass
+!examples/*.pass
+!examples/*.yaml

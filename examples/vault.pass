@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# Example ansible-vault password script.
+#
+# This example uses `rbw` client to fetch ansible vault password from BitWarden.
+rbw get anarres-ansible-vault

@@ -3,7 +3,7 @@ rbw:
   email:
 
 spacevim:
-  colorscheme: zaibatsu
+  colorscheme:
 
 zsh:
   plugins:
