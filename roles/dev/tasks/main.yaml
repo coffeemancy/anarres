@@ -9,6 +9,16 @@
 # * docker
 # * python
 
+- name: Install general dev env packages
+  community.general.pacman:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - jq
+    - meld
+  when: ansible_os_family == "Archlinux"
+  become: true
+
 # docker dev env
 - name: Setup docker dev env
   include_tasks:

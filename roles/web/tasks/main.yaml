@@ -8,9 +8,8 @@
     name: "{{ item }}"
     state: latest
   loop:
-  - adobe-source-code-pro-fonts
-  - feh
-  - firefox
-  - meld
+    - feh
+    - firefox
+    - qbittorrent
   when: ansible_os_family == "Archlinux"
   become: true

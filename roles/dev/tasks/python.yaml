@@ -14,26 +14,30 @@
   when: ansible_os_family == "Archlinux"
   become: true
 
-- name: Install AUR python dev env packages with yay
-  command:
-    cmd: "yay --noconfirm --noprogressbar --needed --aur --sync {{ item }}"
+- name: Install python dev env packages with pipx
+  community.general.pipx:
+    name: "{{ item }}"
   loop:
-    - pyenv-virtualenv
-  register: result
-  changed_when: "'there is nothing to do' not in result.stdout"
-  when: ansible_os_family == "Archlinux"
+    - black
+    - ipython
+    - poetry
 
-# - name: make sure {{ username }} owns pyenv dir
-#   file: path={{ pyenv.dir }} state=directory recurse=true
-#         owner={{ username }} group={{ username }}
-# 
-# - name: get list of installed pythons
-#   shell: ls "{{ pyenv.dir }}/versions" 2>&1 || echo ""
-#   register: pythons_installed
-# 
-# - name: install pythons
-#   shell: "{{ pyenv.dir }}/bin/pyenv install {{ item }}"
-#   become: yes
-#   become_user: "{{ username }}"
-#   with_items: "{{ pyenv.pythons }}"
-#   when: item not in pythons_installed.stdout_lines
+- name: Assure user owns pyenv dir
+  file:
+    group: "{{ username }}"
+    owner: "{{ username }}"
+    # note: assumes PYENV_ROOT is $HOME/.pyenv
+    path: "{{ home }}/.pyenv"
+    recurse: true
+    state: directory
+
+- name: Determine python versions installed via pyenv
+  shell:
+    cmd: "pyenv versions --bare"
+  register: pyenv_versions
+
+- name: Install python versions with pyenv
+  shell:
+    cmd: "pyenv install {{ item }}"
+  loop: "{{ pyenv.versions }}"
+  when: "item not in pyenv_versions.stdout_lines"

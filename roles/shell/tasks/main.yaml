@@ -8,9 +8,11 @@
     name: "{{ item }}"
     state: latest
   loop:
+    - adobe-source-code-pro-fonts
     - htop
     - neovim
     - rbw
+    - ripgrep
     - tmux
     - tree
     - zsh
@@ -26,57 +28,12 @@
   changed_when: "'there is nothing to do' not in result.stdout"
   when: ansible_os_family == "Archlinux"
 
-## oh-my-zsh
-
-- name: Assure user owns .oh-my-zsh directories
-  file:
-    group: "{{ username }}"
-    owner: "{{ username }}"
-    path: "{{ home }}/.oh-my-zsh"
-    recurse: true
-  become: true
-
-- name: Update oh-my-zsh settings in .zshrc
-  lineinfile:
-    line: "{{ item.line }}"
-    path: "{{ home }}/.zshrc"
-    regexp: "{{ item.regexp }}"
-    state: present
+- name: Configure shell and CLI apps
+  include_tasks:
+    file: "{{ item }}"
   loop:
-    - line: "ZSH_THEME={{ zsh.theme }}"
-      regexp: "^ZSH_THEME="
-    - line: "plugins=({{ zsh.plugins | join(' ') }})"
-      regexp: "^plugins="
-
-# make sure pyenv is loaded before plugins, otherwise get warning
-- name: Assure pyenv is loaded before plugins in .zshrc
-  blockinfile:
-    append_newline: true
-    block: |
-      export PYENV_ROOT="$HOME/.pyenv"
-      if [[ -e "$PYENV_ROOT" ]]; then
-        if [[ "$PATH" != *"$PYENV_ROOT/bin"* ]]; then
-          export PATH="$PYENV_ROOT/bin:$PATH"
-        fi
-        eval "$(pyenv init --path)"
-      fi
-    # insert block at beginning of file
-    insertbefore: "BOF"
-    path: "{{ home }}/.zshrc"
-    prepend_newline: true
-
-- name: Update custom zsh files
-  template:
-    src: "{{ item }}.j2"
-    # note: oh-my-zsh automatically sources all files in $ZSH_CUSTOM i.e. ~/.oh-my-zsh/custom/
-    dest: "{{ home }}/.oh-my-zsh/custom/{{ item }}"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0750
-  loop:
-    - aliases.zsh
-    - custom.zsh
-    - functions.zsh
+    - ohmyzsh.yaml
+    - spacevim.yaml
 
 ## rbw
 
@@ -97,35 +54,12 @@
     - "rbw_configured.rc != 0"
     - "rbw.email is not none"
 
-## spacevim
+## tmux
 
-- name: Download SpaceVim
-  get_url:
-    url: https://spacevim.org/install.sh
-    dest: "{{ home }}/.oh-my-zsh/spacevim-install.sh"
+- name: Configure tmux
+  template:
+    src: "tmux.conf.j2"
+    dest: "{{ home }}/.tmux.conf"
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: 0750
-  register: get_spacevim
-
-- name: Install SpaceVim
-  shell:
-    cmd: "bash {{ home }}/.oh-my-zsh/spacevim-install.sh"
-  when: "get_spacevim.changed"
-
-- name: Enable colorschemes in SpaceVim
-  blockinfile:
-    append_newline: true
-    block: |
-      [[layers]]
-      name = "colorscheme"
-    path: "{{ home }}/.SpaceVim.d/init.toml"
-    prepend_newline: true
-
-- name: Set colorscheme for SpaceVim
-  lineinfile:
-    backrefs: true
-    line: '\1 = "{{ spacevim.colorscheme }}"'
-    path: "{{ home }}/.SpaceVim.d/init.toml"
-    regexp: "^(.*colorscheme) ="
-    state: present
+    mode: 0640

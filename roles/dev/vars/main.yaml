@@ -1,0 +1,4 @@
+---
+pyenv:
+  # list of python versions to install with pyenv
+  versions: []
