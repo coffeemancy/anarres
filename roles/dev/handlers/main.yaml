@@ -1,0 +1,12 @@
+---
+# Anarres :: dev :: handlers
+#
+# Handlers for configuring development environment.
+
+- name: Install python versions with pyenv
+  ansible.builtin.command:
+    cmd: "pyenv install {{ item }}"
+  loop: "{{ pyenv.versions }}"
+  register: pyenv_install
+  changed_when: "pyenv_install.rc == 0"
+  when: "item not in pyenv_versions.stdout_lines"

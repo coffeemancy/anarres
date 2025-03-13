@@ -20,7 +20,7 @@
   when: ansible_os_family == "Archlinux"
 
 - name: Install AUR CLI packages with yay
-  command:
+  ansible.builtin.command:
     cmd: "yay --noconfirm --noprogressbar --needed --aur --sync {{ item }}"
   loop:
     - oh-my-zsh-git
@@ -29,7 +29,7 @@
   when: ansible_os_family == "Archlinux"
 
 - name: Configure shell and CLI apps
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: "{{ item }}"
   loop:
     - ohmyzsh.yaml
@@ -38,28 +38,22 @@
 ## rbw
 
 - name: Check if rbw Bitwarden client is already configured
-  command:
+  ansible.builtin.command:
     cmd: "rbw config show"
   register: rbw_configured
-  changed_when: "'failed to load config' in rbw_configured.stderr"
+  changed_when:
+    - "rbw_configured.rc != 0"
+    - "'failed to load config' in rbw_configured.stderr"
   # only fail if rbw command is missing
   failed_when: "rbw_configured.rc == 127"
-
-- name: Configure rbw Bitwarden client
-  command:
-    cmd: "rbw config set {{ item.key }} {{ item.value }}"   
-  loop: "{{ rbw | dict2items }}"
-  when: 
-    # only run when rbw is not configured and email is set
-    - "rbw_configured.rc != 0"
-    - "rbw.email is not none"
+  notify: Configure rbw Bitwarden client
 
 ## tmux
 
 - name: Configure tmux
-  template:
+  ansible.builtin.template:
     src: "tmux.conf.j2"
     dest: "{{ home }}/.tmux.conf"
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: 0640
+    mode: "0640"

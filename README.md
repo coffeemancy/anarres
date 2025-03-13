@@ -31,8 +31,12 @@ ansible-playbook anarres.yaml -K -i inv -u user --extra-vars "@vars.yaml"
 
 ## development and testing
 
-Development and testing entails running `ansible` inside of `docker` containers using `docker-compose`.
-These tests are also run on PRs via Github Actions (located in `.github/workflows` directory).
+Development and testing entails:
+
+1. Making local changes
+1. Checking "PR tests" pass locally (equivalent to Github Actions workflows which run on PRs)
+1. Open Pull Request on Github from a dev branch into `main`
+1. Once PR tests pass, merging PR to `main` 
 
 Setting up the recommended development environment entails:
 
@@ -42,8 +46,8 @@ Setting up the recommended development environment entails:
 1. Installing dependencies with `poetry` into a virtualenv
 
 > [!NOTE]
-> When `ansible` is run on localhost, it actually will install `pyenv` and `poetry`,
-> and install python(s) with `pyenv`. 
+> Using the playbook in this repo, when `ansible-playbook` is run against localhost, it actually will
+> install `pyenv` and `poetry`, and install python(s) with `pyenv`. 
 
 With `pyenv` and `poetry` installed, the below commands should set up a dev env:
 
@@ -53,8 +57,23 @@ source .venv/bin/activate
 poetry install
 ```
 
+### running PR-equivalent tests locally
+
+With a working dev env, local equivalents to tests run on Pull Requests via Github Action can be run locally:
+
+```bash
+./tests/pr-tests.sh
+```
+
+These tests are intended to cover the same checks as defined in the `.github/workflows/pr-*.yaml` files.
+
+For convenience, it is recommended to set these up as a commit (or push) hook, e.g. with:
+
+```bash
+ln -s ../../tests/pr-tests.sh .git/hooks/pre-commit
+```
+
 [ansible]: https://github.com/ansible/ansible
 [endeavouros]: https://endeavouros.com/
 [pipx]: https://github.com/pypa/pipx 
 [poetry]: https://github.com/python-poetry/poetry
-

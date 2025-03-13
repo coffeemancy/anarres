@@ -21,14 +21,14 @@
 
 # docker dev env
 - name: Setup docker dev env
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: docker.yaml
   tags:
     - docker
 
 # python dev env
 - name: Setup python dev env
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: python.yaml
   tags:
     - python

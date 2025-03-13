@@ -1,6 +1,6 @@
 ---
 # Anarres :: pre
-# 
+#
 # Role to setup pre-requisites prior to running other roles.
 #
 - name: "Install pre-requisite packages"
@@ -14,10 +14,10 @@
   when: ansible_os_family == "Archlinux"
 
 ## ssh
-- name: "Assure {{ username }} owns their ssh directory"
-  file:
+- name: "Assure user owns their ssh directory"
+  ansible.builtin.file:
     group: "{{ username }}"
-    mode: 0700
+    mode: "0700"
     owner: "{{ username }}"
     path: "{{ home }}/.ssh/keys"
     recurse: true
@@ -25,8 +25,8 @@
   become: true
 
 - name: "Add github to ssh config"
-  # NOTE: community.general.ssh_config is _not_ used, as that requires paramiko
-  blockinfile:
+  # note: community.general.ssh_config is _not_ used, as that requires paramiko
+  ansible.builtin.blockinfile:
     append_newline: true
     block: |
       Host github.com
@@ -34,7 +34,7 @@
         IdentityFile ~/.ssh/github
         IdentitiesOnly yes
     group: "{{ username }}"
-    mode: 0700
+    mode: "0700"
     owner: "{{ username }}"
     path: "{{ home }}/.ssh/config"
     prepend_newline: true

@@ -1,0 +1,18 @@
+---
+name: ansible-lint
+on:
+  pull_request:
+    paths:
+      - .ansible-lint.yaml
+      - .github/workflows/pr-ansible-lint.yaml
+      - 'roles/**'
+      - '**.yaml'
+
+jobs:
+  build:
+    name: Ansible Lint
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ansible-lint
+        uses: ansible/ansible-lint@main

@@ -1,0 +1,4 @@
+---
+skip_list:
+  # ignore requiring role prefix in variable names
+  - var-naming[no-role-prefix]

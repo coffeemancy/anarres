@@ -4,21 +4,16 @@
 # Role to  configure SpaceVim.
 #
 - name: Download SpaceVim
-  get_url:
+  ansible.builtin.get_url:
     url: https://spacevim.org/install.sh
     dest: "{{ home }}/.oh-my-zsh/spacevim-install.sh"
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: 0750
-  register: get_spacevim
-
-- name: Install SpaceVim
-  shell:
-    cmd: "bash {{ home }}/.oh-my-zsh/spacevim-install.sh"
-  when: "get_spacevim.changed"
+    mode: "0750"
+  notify: Install SpaceVim
 
 - name: Enable colorschemes in SpaceVim
-  blockinfile:
+  ansible.builtin.blockinfile:
     append_newline: true
     block: |
       [[layers]]
@@ -27,7 +22,7 @@
     prepend_newline: true
 
 - name: Set colorscheme for SpaceVim
-  lineinfile:
+  ansible.builtin.lineinfile:
     backrefs: true
     line: '\1 = "{{ spacevim.colorscheme }}"'
     path: "{{ home }}/.SpaceVim.d/init.toml"

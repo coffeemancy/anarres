@@ -4,7 +4,7 @@
 # Role to configure oh-my-zsh.
 #
 - name: Assure user owns .oh-my-zsh directories
-  file:
+  ansible.builtin.file:
     group: "{{ username }}"
     owner: "{{ username }}"
     path: "{{ home }}/.oh-my-zsh"
@@ -12,7 +12,7 @@
   become: true
 
 - name: Update oh-my-zsh settings in .zshrc
-  lineinfile:
+  ansible.builtin.lineinfile:
     line: "{{ item.line }}"
     path: "{{ home }}/.zshrc"
     regexp: "{{ item.regexp }}"
@@ -25,7 +25,7 @@
 
 # make sure pyenv is loaded before plugins, otherwise get warning
 - name: Assure pyenv is loaded before plugins in .zshrc
-  blockinfile:
+  ansible.builtin.blockinfile:
     append_newline: true
     block: |
       export PYENV_ROOT="$HOME/.pyenv"
@@ -41,13 +41,13 @@
     prepend_newline: true
 
 - name: Update custom zsh files
-  template:
+  ansible.builtin.template:
     src: "{{ item }}.j2"
     # note: oh-my-zsh automatically sources all files in $ZSH_CUSTOM i.e. ~/.oh-my-zsh/custom/
     dest: "{{ home }}/.oh-my-zsh/custom/{{ item }}"
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: 0750
+    mode: "0750"
   loop:
     - aliases.zsh
     - custom.zsh

@@ -1,6 +1,6 @@
 ---
 # Anarres :: dev :: python
-# 
+#
 # Setup python-based development environment.
 #
 # This task file is included in main whenever the "python" tag is not in "--skip-tags".
@@ -23,7 +23,7 @@
     - poetry
 
 - name: Assure user owns pyenv dir
-  file:
+  ansible.builtin.file:
     group: "{{ username }}"
     owner: "{{ username }}"
     # note: assumes PYENV_ROOT is $HOME/.pyenv
@@ -32,12 +32,8 @@
     state: directory
 
 - name: Determine python versions installed via pyenv
-  shell:
+  ansible.builtin.command:
     cmd: "pyenv versions --bare"
   register: pyenv_versions
-
-- name: Install python versions with pyenv
-  shell:
-    cmd: "pyenv install {{ item }}"
-  loop: "{{ pyenv.versions }}"
-  when: "item not in pyenv_versions.stdout_lines"
+  changed_when: "pyenv_versions.stdout_lines | intersect(pyenv.versions | d([]))"
+  notify: Install python versions with pyenv
