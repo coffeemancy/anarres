@@ -4,6 +4,8 @@ rbw:
 
 spacevim:
   colorscheme:
+  custom_plugins: [{}]
+  layers: [{}]
 
 zsh:
   plugins:

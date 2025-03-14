@@ -22,15 +22,6 @@
     - ipython
     - poetry
 
-- name: Assure user owns pyenv dir
-  ansible.builtin.file:
-    group: "{{ username }}"
-    owner: "{{ username }}"
-    # note: assumes PYENV_ROOT is $HOME/.pyenv
-    path: "{{ home }}/.pyenv"
-    recurse: true
-    state: directory
-
 - name: Determine python versions installed via pyenv
   ansible.builtin.command:
     cmd: "pyenv versions --bare"

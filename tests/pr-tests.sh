@@ -35,12 +35,20 @@ function handle_exit {
 
 trap handle_exit exit
 
-# pre-commit functions
+# test functions
 
 function test_ansible_lint {
   echo -ne "\e[36mansible-lint\e[0m"
   if [[ -n "${SKIP_ANSIBLE_LINT:-}" ]]; then skip_command; return; fi
   ansible-lint >"${LAST_LOG}" 2>&1
+  success
+}
+
+function test_markdownlint {
+  echo -ne "\e[36mmarkdownlint\e[0m"
+  if [[ -n "${SKIP_MARKDOWN:-}" ]]; then skip_command; return; fi
+  if ! command -v markdownlint >/dev/null; then missing_command; return; fi
+  markdownlint . >"${LAST_LOG}" 2>&1
   success
 }
 
@@ -52,8 +60,10 @@ function test_shellcheck {
   success
 }
 
-function test {
+# run all tests
+function run_tests {
   test_ansible_lint
+  test_markdownlint
   test_shellcheck
 }
 
@@ -62,4 +72,4 @@ if [[ -d "${VENV:-}" ]]; then
   source "${VENV}/bin/activate" >/dev/null 2>&1
 fi
 
-test
+run_tests

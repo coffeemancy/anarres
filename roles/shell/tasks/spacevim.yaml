@@ -12,20 +12,10 @@
     mode: "0750"
   notify: Install SpaceVim
 
-- name: Enable colorschemes in SpaceVim
-  ansible.builtin.blockinfile:
-    append_newline: true
-    block: |
-      [[layers]]
-      name = "colorscheme"
-    path: "{{ home }}/.SpaceVim.d/init.toml"
-    prepend_newline: true
-
-- name: Set colorscheme for SpaceVim
-  ansible.builtin.lineinfile:
-    backrefs: true
-    line: '\1 = "{{ spacevim.colorscheme }}"'
-    path: "{{ home }}/.SpaceVim.d/init.toml"
-    regexp: "^(.*colorscheme) ="
-    state: present
-  when: "spacevim.colorscheme is not none"
+- name: Configure SpaceVim
+  ansible.builtin.template:
+    dest: "{{ home }}/.SpaceVim.d/init.toml"
+    group: "{{ username }}"
+    mode: "0640"
+    owner: "{{ username }}"
+    src: "spacevim/init.toml.j2"

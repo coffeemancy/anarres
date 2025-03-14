@@ -1,0 +1,19 @@
+---
+spacevim:
+  colorscheme: tokyonight-storm
+  custom_plugins:
+    - repo: "folke/tokyonight.nvim"
+      merged: 0
+  layers:
+    - name: "lang#javascript"
+      enable_flow_syntax: true
+    - name: "shell"
+      default_position: "top"
+      default_height: 30
+
+zsh:
+  plugins:
+    - git
+    - pyenv
+    - tmux
+  theme: robbyrussell
