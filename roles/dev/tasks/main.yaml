@@ -15,7 +15,9 @@
     state: latest
   loop:
     - jq
+    - markdownlint-cli
     - meld
+    - shellcheck
   when: ansible_os_family == "Archlinux"
   become: true
 

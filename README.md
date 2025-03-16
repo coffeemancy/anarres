@@ -113,6 +113,19 @@ For convenience, it is recommended to set these up as a commit (or push) hook, e
 ln -s ../../tests/pr-tests.sh .git/hooks/pre-commit
 ```
 
+### running PR tests with `act`
+
+Alternatively to running the PR-equivalent tests (or in addition to), the checks can also be run directly
+with [`act`][act], however this requires `docker`, pulling rather larger images, and some additional time
+and resource overhead than using the PR-equivalent tests.
+
+The tests which would be run on a PR can be run with `act` via:
+
+```bash
+act pull-request
+```
+
+[act]: https://github.com/nektos/act
 [ansible]: https://github.com/ansible/ansible
 [ansible-vault]: https://docs.ansible.com/ansible/latest/cli/ansible-vault.html
 [endeavouros]: https://endeavouros.com/

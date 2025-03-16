@@ -8,6 +8,7 @@
     name: "{{ item }}"
     state: latest
   loop:
+    - expressvpn
     - feh
     - firefox
     - qbittorrent
