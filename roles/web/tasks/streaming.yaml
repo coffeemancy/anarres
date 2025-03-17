@@ -1,0 +1,16 @@
+---
+# Anarres :: web :: streaming
+#
+# Install and configure streaming-related apps.
+#
+# These tasks are only included when the "streaming" tag is explicitly included with "-t streaming".
+- name: Install apps for streaming
+  community.general.pacman:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - cameractrls
+    - obs-studio
+    - v4l2loopback-dkms
+  when: ansible_os_family == "Archlinux"
+  become: true

@@ -14,3 +14,19 @@
     - qbittorrent
   when: ansible_os_family == "Archlinux"
   become: true
+
+# only include when gaming tag is specified
+- name: Include tasks for gaming
+  ansible.builtin.include_tasks:
+    file: gaming.yaml
+  tags:
+    - never
+    - gaming
+
+# only include when streaming tag is specified
+- name: Include tasks for streaming
+  ansible.builtin.include_tasks:
+    file: streaming.yaml
+  tags:
+    - never
+    - streaming

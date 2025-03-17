@@ -16,10 +16,13 @@
   roles:
     # setup prerequisites
     - role: pre
+      tags: pre
     # setup shell and CLI apps
     - role: shell
+      tags: shell
     # setup web and GUI apps
     - role: web
+      tags: web
     # setup development environments
     - role: dev
       tags: dev

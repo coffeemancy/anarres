@@ -1,0 +1,15 @@
+---
+# Anarres :: web :: gaming
+#
+# Install and configure gaming-related apps.
+#
+# These tasks are only included when the "gaming" tag is explicitly included with "-t gamning".
+- name: Install apps for gaming
+  community.general.pacman:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - retroarch
+    - steam
+  when: ansible_os_family == "Archlinux"
+  become: true
