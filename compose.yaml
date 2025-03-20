@@ -1,0 +1,8 @@
+---
+# docker-compose file to test anarres ansible playbook
+services:
+  app:
+    build: .
+    tty: true
+    volumes:
+      - .:/app:ro
