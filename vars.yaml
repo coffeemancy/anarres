@@ -13,6 +13,8 @@ spacevim:
 
 zsh:
   plugins:
+    - docker
+    - docker-compose
     - git
     - pyenv
     - tmux
