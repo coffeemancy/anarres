@@ -2,7 +2,10 @@
 # docker-compose file to test anarres ansible playbook
 services:
   app:
-    build: .
+    build:
+      context: .
+      network: host
+    network_mode: host
     tty: true
     volumes:
       - .:/app:ro

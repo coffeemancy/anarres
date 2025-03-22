@@ -33,6 +33,7 @@
         User git
         IdentityFile ~/.ssh/github
         IdentitiesOnly yes
+    create: true
     group: "{{ username }}"
     mode: "0700"
     owner: "{{ username }}"

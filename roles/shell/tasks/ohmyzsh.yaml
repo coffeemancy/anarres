@@ -11,6 +11,7 @@
     recurse: true
   become: true
 
+# TODO: this fails if .zshrc file does not exist, probably template in that case
 - name: Update oh-my-zsh settings in .zshrc
   ansible.builtin.lineinfile:
     line: "{{ item.line }}"
