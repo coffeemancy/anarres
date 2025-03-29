@@ -12,6 +12,14 @@
     mode: "0750"
   notify: Install SpaceVim
 
+- name: Create SpaceVim config directory
+  ansible.builtin.file:
+    path: "{{ home }}/.SpaceVim.d"
+    group: "{{ username }}"
+    owner: "{{ username }}"
+    mode: "0750"
+    state: directory
+
 - name: Configure SpaceVim
   ansible.builtin.template:
     dest: "{{ home }}/.SpaceVim.d/init.toml"

@@ -5,15 +5,22 @@
 #
 - name: Install web and GUI app packages
   community.general.pacman:
-    name: "{{ item }}"
+    name:
+      - feh
+      - firefox
+      - qbittorrent
     state: latest
-  loop:
-    - expressvpn
-    - feh
-    - firefox
-    - qbittorrent
   when: ansible_os_family == "Archlinux"
   become: true
+
+- name: Install AUR web and GUI packages with yay
+  ansible.builtin.command:
+    cmd: >
+      yay --noconfirm --noprogressbar --needed --aur --sync
+      expressvpn
+  register: result
+  changed_when: "'there is nothing to do' not in result.stdout"
+  when: ansible_os_family == "Archlinux"
 
 # only include when gaming tag is specified
 - name: Include tasks for gaming

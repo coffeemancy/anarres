@@ -11,7 +11,17 @@
     recurse: true
   become: true
 
-# TODO: this fails if .zshrc file does not exist, probably template in that case
+- name: Create initial .zshrc using oh-my-zsh template
+  ansible.builtin.copy:
+    src: "/usr/share/oh-my-zsh/templates/zshrc.zsh-template"
+    dest: "{{ home }}/.zshrc"
+    remote_src: true
+    group: "{{ username }}"
+    owner: "{{ username }}"
+    mode: "0750"
+    # do not create file if already exists
+    force: false
+
 - name: Update oh-my-zsh settings in .zshrc
   ansible.builtin.lineinfile:
     line: "{{ item.line }}"
@@ -40,6 +50,14 @@
     insertbefore: "BOF"
     path: "{{ home }}/.zshrc"
     prepend_newline: true
+
+- name: Create custom zsh directory
+  ansible.builtin.file:
+    path: "{{ home }}/.oh-my-zsh/custom"
+    group: "{{ username }}"
+    owner: "{{ username }}"
+    mode: "0750"
+    state: directory
 
 - name: Update custom zsh files
   ansible.builtin.template:

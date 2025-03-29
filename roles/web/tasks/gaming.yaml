@@ -4,12 +4,33 @@
 # Install and configure gaming-related apps.
 #
 # These tasks are only included when the "gaming" tag is explicitly included with "-t gamning".
-- name: Install apps for gaming
+
+# Install dependencies with --asdeps to avoid later provider prompts during app install
+- name: Install gaming dependencies
   community.general.pacman:
     name: "{{ item }}"
+    extra_args: "--asdeps"
     state: latest
   loop:
-    - retroarch
-    - steam
+    # note: order matters
+    - "lib32-{{ steam.vulkan_driver }}"
+    - "{{ steam.vulkan_driver }}"
+  when: ansible_os_family == "Archlinux"
+  become: true
+
+# updates /etc/lsb-release before pulled in by Steam
+- name: Update lsb-release
+  community.general.pacman:
+    name: lsb-release
+    extra_args: "--overwrite '/etc/lsb-release'"
+  when: ansible_os_family == "Archlinux"
+  become: true
+
+- name: Install apps for gaming
+  community.general.pacman:
+    name:
+      - retroarch
+      - steam
+    state: latest
   when: ansible_os_family == "Archlinux"
   become: true

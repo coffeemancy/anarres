@@ -2,8 +2,10 @@
 #
 # Anarres integration tests.
 #
-# These tests require a working development environment (as described in README.md), as well as docker
-# and docker-compose.
+# Spins up target systems with `docker-compose` and runs `ansible-playbook`.
+#
+# These tests require a working development environment (as described in README.md), as well as
+# `docker` and `docker-compose`.
 
 set -euo pipefail
 
@@ -28,7 +30,7 @@ function handle_exit {
   ret=$?
   if (( ret != 0 )); then
     echo -e " \e[1;31m✗\e[0m"
-    if [[ -e "${LAST_LOG:-}" ]]; then less "${LAST_LOG}" 1>&2;
+    if [[ -e "${LAST_LOG:-}" ]]; then less -R "${LAST_LOG}" 1>&2;
     else err "Failed to capture errors"; 
     fi
   fi
@@ -64,7 +66,10 @@ function compose_up {
 
 function ansible_playbook {
   note "Running ansible-playbook"
-  cmd="PATH=\$PATH:/home/user/.local/bin ansible-playbook anarres.yaml -i inv -u user -e @examples/vars.yaml -v"
+  cmd="PATH=\$PATH:/home/user/.local/bin "
+  cmd+="ansible-playbook anarres.yaml -i inv -u user -e @examples/vars.yaml -v "
+  # run all tasks, including the "never" ones (e.g. gaming, streaming)
+  cmd+="-t all,never"
   if [[ -n "$VERBOSE" ]]; then
     echo
     docker-compose exec -w /app -t app bash -c "$cmd" 2>&1 | tee "${LAST_LOG}"

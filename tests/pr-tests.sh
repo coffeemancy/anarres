@@ -23,7 +23,7 @@ function handle_exit {
   ret=$?
   if (( ret != 0 )); then
     echo -e " \e[1;31m✗\e[0m"
-    if [[ -e "${LAST_LOG:-}" ]]; then less "${LAST_LOG}" 1>&2;
+    if [[ -e "${LAST_LOG:-}" ]]; then less -R "${LAST_LOG}" 1>&2;
     else echo -e "\e[31mFailed to capture errors\e[0m"; 
     fi
   fi
@@ -40,7 +40,7 @@ trap handle_exit exit
 function test_ansible_lint {
   echo -ne "\e[36mansible-lint\e[0m"
   if [[ -n "${SKIP_ANSIBLE_LINT:-}" ]]; then skip_command; return; fi
-  ansible-lint >"${LAST_LOG}" 2>&1
+  ansible-lint -s >"${LAST_LOG}" 2>&1
   success
 }
 

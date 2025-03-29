@@ -5,11 +5,10 @@
 #
 - name: "Install pre-requisite packages"
   community.general.pacman:
-    name: "{{ item }}"
+    name:
+      - git
+      - yay
     state: latest
-  loop:
-    - git
-    - yay
   become: true
   when: ansible_os_family == "Archlinux"
 

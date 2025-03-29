@@ -36,6 +36,11 @@ function build_args {
     ARGS+=("--ask-become-pass")
   fi
 
+  # add tags if specfied
+  if [[ -n "${TAGS:-}" ]]; then
+    ARGS+=("-t" "$TAGS")
+  fi
+
   # increase verbosity if DEBUG is set
   if [[ -n "${DEBUG:-}" ]]; then
     ARGS+=("-vv")

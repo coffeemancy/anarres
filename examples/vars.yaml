@@ -27,6 +27,9 @@ rbw:
 spacevim:
   colorscheme: jellybeans
 
+steam:
+  vulkan_driver: nvidia-utils
+
 # oh-my-zsh settings
 zsh:
   plugins:

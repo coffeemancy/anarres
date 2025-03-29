@@ -10,12 +10,14 @@ enable_tabline_filetype_icon = true
 # enable_statusline_mode = false
 
 {# enable custom plugins #}
+{% if spacevim.custom_plugins is defined %}
 {% for plugin in spacevim.custom_plugins %}
 [[custom_plugins]]
 {% for key, value in plugin.items() -%}
 {{ key }} = {{ value | to_json }}
 {% endfor %}
 {% endfor %}
+{% endif %}
 
 [[layers]]
 name = "autocomplete"
@@ -27,9 +29,11 @@ autocomplete_method = "deoplete"
 name = "colorscheme"
 
 {# enable other layers defined in vars #}
+{% if spacevim.layers is defined %}
 {% for layer in spacevim.layers %}
 [[layers]]
 {% for key, value in layer.items() -%}
 {{ key }} = {{ value | to_json }}
 {% endfor +%}
 {% endfor %}
+{% endif %}

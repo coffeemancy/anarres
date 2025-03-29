@@ -7,13 +7,12 @@
 
 - name: Install docker dev env packages
   community.general.pacman:
-    name: "{{ item }}"
+    name:
+      - act
+      - docker
+      - docker-buildx
+      - docker-compose
     state: latest
-  loop:
-    - act
-    - docker
-    - docker-buildx
-    - docker-compose
   when: ansible_os_family == "Archlinux"
   become: true
 

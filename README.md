@@ -71,6 +71,7 @@ Development and testing entails:
 
 1. Making local changes
 1. Checking "PR tests" pass locally (equivalent to Github Actions workflows which run on PRs)
+1. (Ideally) Running "integration tests" (`ansible` inside of `docker` containers using `docker-compose`)
 1. Open Pull Request on Github from a dev branch into `main`
 1. Once PR tests pass, merging PR to `main`
 
@@ -113,7 +114,7 @@ For convenience, it is recommended to set these up as a commit (or push) hook, e
 ln -s ../../tests/pr-tests.sh .git/hooks/pre-commit
 ```
 
-### running PR tests with `act`
+#### running PR tests with `act`
 
 Alternatively to running the PR-equivalent tests (or in addition to), the checks can also be run directly
 with [`act`][act], however this requires `docker`, pulling rather larger images, and some additional time
@@ -125,9 +126,27 @@ The tests which would be run on a PR can be run with `act` via:
 act pull-request
 ```
 
+### running integration tests locally
+
+Integration tests run `ansible-playbook` against actual target systems spun up via `docker-compose`.
+
+> [!NOTE]
+> The integration tests take _much_ longer to run than PR-equivalent tests, require a
+> working `docker` / `docker-compose` install, and download _large_ multi-GB images from [dockerhub][dockerhub].
+
+After an initial run (which downloads the large `docker` images), iterations should be relatively fast,
+and could even be used as a pre-push hook if desired.
+
+Integration tests can be run via:
+
+```bash
+./tests/int-tests.sh
+```
+
 [act]: https://github.com/nektos/act
 [ansible]: https://github.com/ansible/ansible
 [ansible-vault]: https://docs.ansible.com/ansible/latest/cli/ansible-vault.html
+[dockerhub]: https://hub.docker.com
 [endeavouros]: https://endeavouros.com/
 [pipx]: https://github.com/pypa/pipx
 [poetry]: https://github.com/python-poetry/poetry

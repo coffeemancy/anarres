@@ -11,13 +11,12 @@
 
 - name: Install general dev env packages
   community.general.pacman:
-    name: "{{ item }}"
+    name:
+      -jq
+      - markdownlint-cli
+      - meld
+      - shellcheck
     state: latest
-  loop:
-    - jq
-    - markdownlint-cli
-    - meld
-    - shellcheck
   when: ansible_os_family == "Archlinux"
   become: true
 

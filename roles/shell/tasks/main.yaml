@@ -5,35 +5,36 @@
 #
 - name: Install shell and CLI packages
   community.general.pacman:
-    name: "{{ item }}"
+    name:
+      - adobe-source-code-pro-fonts
+      - htop
+      - neovim
+      - rbw
+      - ripgrep
+      - tmux
+      - tree
+      - zsh
     state: latest
-  loop:
-    - adobe-source-code-pro-fonts
-    - htop
-    - neovim
-    - rbw
-    - ripgrep
-    - tmux
-    - tree
-    - zsh
   become: true
   when: ansible_os_family == "Archlinux"
 
 - name: Install AUR CLI packages with yay
   ansible.builtin.command:
-    cmd: "yay --noconfirm --noprogressbar --needed --aur --sync {{ item }}"
-  loop:
-    - oh-my-zsh-git
+    cmd: >
+      yay --noconfirm --noprogressbar --needed --aur --sync
+      oh-my-zsh-git
   register: result
   changed_when: "'there is nothing to do' not in result.stdout"
   when: ansible_os_family == "Archlinux"
 
 - name: Configure shell and CLI apps
   ansible.builtin.include_tasks:
-    file: "{{ item }}"
+    file: "{{ file }}"
   loop:
     - ohmyzsh.yaml
     - spacevim.yaml
+  loop_control:
+    loop_var: file
 
 ## rbw
 
