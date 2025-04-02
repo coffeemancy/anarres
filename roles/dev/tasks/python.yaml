@@ -7,17 +7,20 @@
 
 - name: Install python dev env packages
   community.general.pacman:
-    name: "pyenv"
+    name: "{{ item }}"
     state: latest
+  loop:
+    - pyenv
   when: ansible_os_family == "Archlinux"
   become: true
 
 - name: Install python dev env packages with pipx
   community.general.pipx:
-    name:
-      - black
-      - ipython
-      - poetry
+    name: "{{ item }}"
+  loop:
+    - black
+    - ipython
+    - poetry
 
 - name: Determine python versions installed via pyenv
   ansible.builtin.command:

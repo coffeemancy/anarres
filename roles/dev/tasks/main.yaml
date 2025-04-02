@@ -12,7 +12,7 @@
 - name: Install general dev env packages
   community.general.pacman:
     name:
-      -jq
+      - jq
       - markdownlint-cli
       - meld
       - shellcheck
