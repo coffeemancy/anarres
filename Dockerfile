@@ -1,7 +1,10 @@
 FROM alex5402/endeavouros
 
 # update all packages
-RUN pacman -Syu --noconfirm
+RUN rm -rf /var/cache/pacman/pkg/* \
+  && pacman -Sy --noconfirm \
+  && pacman -S --noconfirm archlinux-keyring endeavouros-keyring \
+  && pacman -Syu --noconfirm
 
 # install pipx
 RUN pacman -S python-pipx --noconfirm
